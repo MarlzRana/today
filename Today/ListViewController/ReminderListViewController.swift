@@ -8,9 +8,6 @@
 import UIKit
 
 class ReminderListViewController: UICollectionViewController {
-    typealias DataSource = UICollectionViewDiffableDataSource<Int, String>
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Int, String>
-    
     var dataSource: DataSource?
 
     override func viewDidLoad() {
@@ -26,13 +23,7 @@ class ReminderListViewController: UICollectionViewController {
         // One measure used is garbage collecting cells that are no longer visible on the screen (after scrolling)
         // However the user may scroll up
         // Hence we may have to re-register a (new) cell back with its configuration
-        let cellRegistration = UICollectionView.CellRegistration {
-            (cell: UICollectionViewListCell, indexPath: IndexPath, itemIdentifier: String) in
-            let reminder = Reminder.sampleData[indexPath.item]
-            var contentConfiguration = cell.defaultContentConfiguration()
-            contentConfiguration.text = reminder.title
-            cell.contentConfiguration = contentConfiguration
-        }
+        let cellRegistration = UICollectionView.CellRegistration(handler: self.cellRegistrationHandler)
         
         // Data
         // The collection view was set with a list layout
