@@ -11,6 +11,21 @@ extension ReminderListViewController {
     typealias DataSource = UICollectionViewDiffableDataSource<Int, Reminder.ID>
     typealias Snapshot = NSDiffableDataSourceSnapshot<Int, Reminder.ID>
     
+    func updateSnapshot(reloading ids: [Reminder.ID] = []) {
+        // Create some new state
+        var snapshot = Snapshot()
+        snapshot.appendSections([0])
+        snapshot.appendItems(self.reminders.map {$0.id})
+        
+        // If we have modified some reminders (but their ids have stayed constant), let's explicitly ask UIKit to reload them
+        if !ids.isEmpty {
+            snapshot.reloadItems(ids)
+        }
+        
+        // Apply that new state
+        dataSource?.apply(snapshot)
+    }
+    
     func cellRegistrationHandler(cell: UICollectionViewListCell, indexPath: IndexPath, id: Reminder.ID) {
         let reminder = reminder(withID: id)
         var contentConfiguration = cell.defaultContentConfiguration()
@@ -33,7 +48,19 @@ extension ReminderListViewController {
     
     func reminder(withID id: Reminder.ID) -> Reminder {
         let index = reminders.indexOfReminder(withId: id)
-        return self.reminders[index]
+        return reminders[index]
+    }
+    
+    func updateReminder(_ reminder: Reminder) {
+        let index = reminders.indexOfReminder(withId: reminder.id)
+        reminders[index] = reminder
+    }
+    
+    func completeReminder(withId id: Reminder.ID) {
+        var reminder = reminder(withID: id)
+        reminder.isComplete.toggle()
+        updateReminder(reminder)
+        updateSnapshot(reloading: [id])
     }
     
     private func doneButtonConfiguration(for reminder: Reminder) -> UICellAccessory.CustomViewConfiguration {
@@ -43,7 +70,12 @@ extension ReminderListViewController {
         let image = UIImage(systemName: symbolName, withConfiguration: symbolConfiguration)
         let highlightedImage = UIImage(systemName: "circle.circle", withConfiguration: symbolConfiguration)
         
-        let button = UIButton()
+        let button = ReminderDoneButton()
+        button.id = reminder.id
+        
+        // #selector expects an Objective-C method
+        button.addTarget(self, action: #selector(didPressDoneButton(_:)), for: .touchUpInside)
+        
         button.setImage(image, for: .normal)
         button.setImage(highlightedImage, for:.highlighted)
         
