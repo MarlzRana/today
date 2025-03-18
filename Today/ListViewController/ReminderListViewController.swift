@@ -9,6 +9,7 @@ import UIKit
 
 class ReminderListViewController: UICollectionViewController {
     var dataSource: DataSource?
+    var reminders: [Reminder] = Reminder.sampleData
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,14 +33,14 @@ class ReminderListViewController: UICollectionViewController {
         // We define how we present that cell by registering that cell with a configuration that defines the presentation and what data to use
         // https://developer.apple.com/tutorials/app-dev-training/adopting-collection-views
         self.dataSource = DataSource(collectionView: collectionView) {
-            (collectionView: UICollectionView, indexPath: IndexPath, itemIdentifier: String) in
+            (collectionView: UICollectionView, indexPath: IndexPath, itemIdentifier: Reminder.ID) in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
         }
         
         // Create some new state
         var snapshot = Snapshot()
         snapshot.appendSections([0])
-        snapshot.appendItems(Reminder.sampleData.map({ $0.title }))
+        snapshot.appendItems(self.reminders.map {$0.id})
         
         // Apply that new state
         dataSource?.apply(snapshot)
