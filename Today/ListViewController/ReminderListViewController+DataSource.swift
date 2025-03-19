@@ -11,6 +11,14 @@ extension ReminderListViewController {
     typealias DataSource = UICollectionViewDiffableDataSource<Int, Reminder.ID>
     typealias Snapshot = NSDiffableDataSourceSnapshot<Int, Reminder.ID>
     
+    var completedReminderValue: String {
+        NSLocalizedString("Completed", comment: "Reminder completed value")
+    }
+    
+    var notCompletedReminderValue: String {
+        NSLocalizedString("Not completed", comment: "Reminder not completed value")
+    }
+    
     func updateSnapshot(reloading ids: [Reminder.ID] = []) {
         // Create some new state
         var snapshot = Snapshot()
@@ -36,6 +44,8 @@ extension ReminderListViewController {
         
         var doneButtonConfiguration = doneButtonConfiguration(for: reminder)
         doneButtonConfiguration.tintColor = .todayListCellDoneButtonTint
+        cell.accessibilityCustomActions = [doneButtonAccessibilityAction(for: reminder)]
+        cell.accessibilityValue = reminder.isComplete ? completedReminderValue : notCompletedReminderValue
         cell.accessories = [
             .customView(configuration: doneButtonConfiguration),
             .disclosureIndicator(displayed: .always)
@@ -54,6 +64,17 @@ extension ReminderListViewController {
     func updateReminder(_ reminder: Reminder) {
         let index = reminders.indexOfReminder(withId: reminder.id)
         reminders[index] = reminder
+    }
+    
+    private func doneButtonAccessibilityAction(for reminder: Reminder) -> UIAccessibilityCustomAction {
+        let name = NSLocalizedString("Toggle completion", comment: "Reminder done button accessibility")
+        // By default, closures create a strong reference to external values that you use inside them. Specifying a weak reference to the view controller prevents a retain cycle.
+        let action = UIAccessibilityCustomAction(name: name) { [weak self] action ins
+            self?.completeReminder(withId: reminder.id)
+            return true
+        }
+        
+        return action
     }
     
     func completeReminder(withId id: Reminder.ID) {
