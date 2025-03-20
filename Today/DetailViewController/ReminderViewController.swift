@@ -22,8 +22,17 @@ class ReminderViewController: UICollectionViewController {
     
     // Notice the question mark
     // This is a failable initializer
-    // We don't need a failable initializer hence we stub it out
+    // We don't need a failable initializer hence we stub it out    b
     required init?(coder: NSCoder) {
         fatalError("Always initialize ReminderViewController using init(reminder:)")
+    }
+    
+    func text(for row: Row) -> String? {
+        switch row {
+        case .title: return reminder.title
+        case .date: return reminder.dueDate.dayText
+        case .time: return reminder.dueDate.timeText
+        case .notes: return reminder.notes
+        }
     }
 }
