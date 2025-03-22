@@ -8,10 +8,11 @@
 import UIKit
 
 extension ReminderViewController {
-    // Generic arguments
+    // Generic arguments (for both)
     // "Int" specifies that you are going to use Ints to specify/differentiate the sections
     // "Row" specified that you are going to use Rows to specify/differentiate the content
     typealias DataSource = UICollectionViewDiffableDataSource<Int, Row>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Int, Row>
     
     func cellRegistrationHandler(cell: UICollectionViewListCell, indexPath: IndexPath, row: Row) {
         // Adjust the cell's configuration
@@ -24,5 +25,12 @@ extension ReminderViewController {
         cell.contentConfiguration = contentConfiguration
         
         cell.tintColor = .todayPrimaryTint
+    }
+    
+    func updateSnapshot() {
+        var snapshot = Snapshot()
+        snapshot.appendSections([0])
+        snapshot.appendItems([Row.title, Row.date, Row.time, Row.notes], toSection: 0)
+        dataSource?.apply(snapshot)
     }
 }

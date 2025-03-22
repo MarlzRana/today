@@ -32,10 +32,11 @@ class ReminderViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let cellRegistraion = UICollectionView.CellRegistration(handler: cellRegistrationHandler)
-        dataSource = DataSource(collectionView: <#T##UICollectionView#>) {
+        dataSource = DataSource(collectionView: collectionView) {
             (collectionView: UICollectionView, indexPath: IndexPath, itemIdentifier: Row) in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistraion, for: indexPath, item: itemIdentifier)
         }
+        updateSnapshot()
     }
     
     func text(for row: Row) -> String? {
