@@ -42,6 +42,20 @@ class ReminderListViewController: UICollectionViewController {
         collectionView.dataSource = dataSource
     }
     
+    // Triggered when click on a cell
+    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        let id = reminders[indexPath.item].id
+        pushDetailViewForReminder(withId: id)
+        // Stops the cell items from appearing as selected on click (as we just trying to transition to another view)
+        return false
+    }
+    
+    func pushDetailViewForReminder(withId id: Reminder.ID) {
+        let reminder = reminder(withId: id)
+        let viewController = ReminderViewController(reminder: reminder)
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+    
     
     // Layout
     private func listLayout() -> UICollectionViewCompositionalLayout {
