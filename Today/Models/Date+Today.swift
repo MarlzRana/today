@@ -28,7 +28,7 @@ extension Date {
     
     var dayText: String {
         if Locale.current.calendar.isDateInToday(self) {
-            return NSLocalizedString("", comment: "Today due date description")
+            return NSLocalizedString("Today", comment: "Today due date description")
         }
         
         return formatted(.dateTime.month().day().weekday(.wide))
