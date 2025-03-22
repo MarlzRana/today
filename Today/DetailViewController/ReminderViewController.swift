@@ -31,11 +31,16 @@ class ReminderViewController: UICollectionViewController {
     // This is a lifecycle method that is triggered when the view loaded
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         let cellRegistraion = UICollectionView.CellRegistration(handler: cellRegistrationHandler)
         dataSource = DataSource(collectionView: collectionView) {
             (collectionView: UICollectionView, indexPath: IndexPath, itemIdentifier: Row) in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistraion, for: indexPath, item: itemIdentifier)
         }
+        
+        navigationItem.style = .navigator
+        navigationItem.title = NSLocalizedString("Reminder", comment: "Reminder view controller title")
+        
         updateSnapshot()
     }
     
