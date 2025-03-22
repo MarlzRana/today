@@ -43,13 +43,4 @@ class ReminderViewController: UICollectionViewController {
         
         updateSnapshot()
     }
-    
-    func text(for row: Row) -> String? {
-        switch row {
-        case .title: return reminder.title
-        case .date: return reminder.dueDate.dayText
-        case .time: return reminder.dueDate.timeText
-        case .notes: return reminder.notes
-        }
-    }
 }
