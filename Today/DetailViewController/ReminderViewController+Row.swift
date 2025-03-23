@@ -9,6 +9,7 @@ import UIKit
 
 extension ReminderViewController {
     enum Row: Hashable {
+        case header(String)
         case title
         case date
         case time
@@ -44,6 +45,7 @@ extension ReminderViewController {
         case .date: return reminder.dueDate.dayText
         case .time: return reminder.dueDate.timeText
         case .notes: return reminder.notes
+        default: return nil
         }
     }
 }
