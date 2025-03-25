@@ -32,7 +32,7 @@ extension ReminderViewController {
     // .title indexPath.section: 0 enumValue: 1 sectionNumber: 1
     // .date indexPath.section: 1 enumValue: 2 sectionNumber: 2
     // .notes indexPath.section: 2 enumValue: 3 sectionNumber: 3
-    private func section(for indexPath: IndexPath) -> Section {
+    func section(for indexPath: IndexPath) -> Section {
         let sectionNumber = isEditing ? indexPath.section + 1 : indexPath.section
         guard let section = Section(rawValue: sectionNumber) else {
             fatalError("Unable to find matching section")
