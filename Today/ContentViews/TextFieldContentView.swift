@@ -11,7 +11,7 @@ class TextFieldContentView: UIView, UIContentView {
     struct Configuration: UIContentConfiguration {
         var text: String? = ""
         
-        func makeContentView() -> any UIView & UIContentView {
+        func makeContentView() -> UIView & UIContentView {
             return TextFieldContentView(self)
         }
     }
@@ -42,8 +42,6 @@ class TextFieldContentView: UIView, UIContentView {
     func configure(configuration: UIContentConfiguration) {
         guard let configuration = configuration as? Configuration else { return }
         textField.text = configuration.text
-        
-        
     }
 }
 
