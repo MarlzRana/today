@@ -29,7 +29,12 @@ class TextViewContentView: UIView, UIContentView {
     
     init (_ configuration: UIContentConfiguration) {
         self.configuration = configuration
-        super.init(frame: .zero)    }
+        super.init(frame: .zero)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     func configure(configuration: UIContentConfiguration) {
         guard let configuration = configuration as? Configuration else { return }
@@ -37,10 +42,6 @@ class TextViewContentView: UIView, UIContentView {
         addPinnedSubview(textView, height: 200)
         textView.backgroundColor = nil
         textView.font = UIFont.preferredFont(forTextStyle: .body)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
 
