@@ -21,6 +21,8 @@ extension ReminderViewController {
             cell.contentConfiguration = headerConfiguration(for: cell, with: title)
         case(Section.view, _):
             cell.contentConfiguration = defaultConfiguration(for: cell, at: row)
+        case (.title, .editableText(let title)):
+            cell.contentConfiguration = titleConfiguration(for: cell, with: title)
         default:
             fatalError("Unexpected combination of section and row")
         }
@@ -38,7 +40,7 @@ extension ReminderViewController {
     func updateSnapshotForEditing() {
         var snapshot = Snapshot()
         snapshot.appendSections([Section.title, Section.date, Section.notes])
-        snapshot.appendItems([.header(Section.title.name)], toSection: .title)
+        snapshot.appendItems([.header(Section.title.name), .editableText(reminder.title)], toSection: .title)
         snapshot.appendItems([.header(Section.date.name)], toSection: .date)
         snapshot.appendItems([.header(Section.notes.name)], toSection: .notes)
         dataSource?.apply(snapshot)
