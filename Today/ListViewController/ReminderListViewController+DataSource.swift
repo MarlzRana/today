@@ -19,11 +19,14 @@ extension ReminderListViewController {
         NSLocalizedString("Not completed", comment: "Reminder not completed value")
     }
     
-    func updateSnapshot(reloading ids: [Reminder.ID] = []) {
+    func updateSnapshot(reloading idsThatChanged: [Reminder.ID] = []) {
+        // Let's make sure we don't reload reminders that no longer visible in the filtered view
+        let ids = idsThatChanged.filter { id in filteredReminders.contains(where: {$0.id == id}) }
+        
         // Create some new state
         var snapshot = Snapshot()
         snapshot.appendSections([0])
-        snapshot.appendItems(self.reminders.map {$0.id})
+        snapshot.appendItems(self.filteredReminders.map {$0.id})
         
         // If we have modified some reminders (but their ids have stayed constant), let's explicitly ask UIKit to reload them
         if !ids.isEmpty {
