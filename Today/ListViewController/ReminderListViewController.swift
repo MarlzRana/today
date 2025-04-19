@@ -20,6 +20,13 @@ class ReminderListViewController: UICollectionViewController {
         ReminderListStyle.today.name, ReminderListStyle.future.name, ReminderListStyle.all.name
     ])
     var headerView: ProgressHeaderView?
+    var progress: CGFloat {
+        let chunkSize = 1.0 / CGFloat(filteredReminders.count)
+        let progress = filteredReminders.reduce(0.0) {
+            return $0 + ($1.isComplete ? chunkSize : 0)
+        }
+        return progress
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,6 +81,17 @@ class ReminderListViewController: UICollectionViewController {
         pushDetailViewForReminder(withId: id)
         // Stops the cell items from appearing as selected on click (as we just trying to transition to another view)
         return false
+    }
+    
+    // Called just before the system displays the supplementary view
+    override func collectionView(
+        _ collectionView: UICollectionView,
+        willDisplaySupplementaryView view: UICollectionReusableView,
+        forElementKind elementKind: String,
+        at indexPath: IndexPath
+    ) {
+        guard elementKind == ProgressHeaderView.elementKind, let progressView = view as? ProgressHeaderView else { return }
+        progressView.progress = progress
     }
     
     func pushDetailViewForReminder(withId id: Reminder.ID) {
