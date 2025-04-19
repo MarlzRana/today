@@ -10,6 +10,7 @@ import UIKit
 // UICollectionReusableView prevents this view from being deleted and made again everytime it disappers and appears on the screen
 // Instead of being de-allocated from memory it is added to a "reuse queue" and popped off everytime it is back in view
 class ProgressHeaderView: UICollectionReusableView {
+    static var elementKind: String { UICollectionView.elementKindSectionHeader }
     
     var progress: CGFloat = 0 {
         didSet {
