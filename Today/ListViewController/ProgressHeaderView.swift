@@ -10,11 +10,38 @@ import UIKit
 // UICollectionReusableView prevents this view from being deleted and made again everytime it disappers and appears on the screen
 // Instead of being de-allocated from memory it is added to a "reuse queue" and popped off everytime it is back in view
 class ProgressHeaderView: UICollectionReusableView {
-    var progress: CGFloat = 0
+    
+    var progress: CGFloat = 0 {
+        didSet {
+            heightConstraint?.constant = progress * self.bounds.height
+            // Remove this and see what happens?
+            UIView.animate(withDuration: 0.2) { [weak self] in
+                self?.layoutIfNeeded()
+            }
+        }
+    }
     
     private let upperView = UIView(frame: .zero)
     private let lowerView = UIView(frame: .zero)
     private let containerView = UIView(frame: .zero)
+    private var heightConstraint: NSLayoutConstraint?
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        prepareSubviews()
+    }
+    
+    // init?(coder:) is needed if you are loading from a storyboard
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        // Why does this need to be here? (Experiment moving this around)
+        containerView.layer.masksToBounds = true
+        containerView.layer.cornerRadius = 0.5 * containerView.bounds.width
+    }
     
     private func prepareSubviews() {
         containerView.addSubview(upperView)
@@ -51,5 +78,15 @@ class ProgressHeaderView: UICollectionReusableView {
         // Make the contrainer view have 85% the width+height(due to square constraint) of its parent
         // I.e here the common ancestor is self/ProgressHeaderView, hence, it is responsible for enforcing the constraint
         containerView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.85).isActive = true
+        
+        // Define the constraint that will control the lower view height (and in turn the upper view will move inversely due to prior constraints)
+        heightConstraint = lowerView.heightAnchor.constraint(equalToConstant: 0)
+        heightConstraint?.isActive = true
+        
+        // Assign background colors to the views
+        self.backgroundColor = .clear
+        containerView.backgroundColor = .clear
+        upperView.backgroundColor = .todayProgressUpperBackground
+        lowerView.backgroundColor = .todayProgressLowerBackground
     }
 }
