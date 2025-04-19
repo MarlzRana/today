@@ -14,6 +14,9 @@ class ProgressHeaderView: UICollectionReusableView {
     
     var progress: CGFloat = 0 {
         didSet {
+            // Everytime we update progress, invalidate the current layout and trigger an update
+            self.setNeedsLayout()
+            
             heightConstraint?.constant = progress * self.bounds.height
             // Remove this and see what happens?
             UIView.animate(withDuration: 0.2) { [weak self] in
@@ -26,10 +29,17 @@ class ProgressHeaderView: UICollectionReusableView {
     private let lowerView = UIView(frame: .zero)
     private let containerView = UIView(frame: .zero)
     private var heightConstraint: NSLayoutConstraint?
+    private var valueFormat: String {
+        NSLocalizedString("%d percent", comment: "progress percentage value format")
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         prepareSubviews()
+        
+        self.isAccessibilityElement = true
+        self.accessibilityLabel = NSLocalizedString("Progress", comment: "Progress view accessibility")
+        self.accessibilityTraits.update(with: .updatesFrequently)
     }
     
     // init?(coder:) is needed if you are loading from a storyboard
@@ -39,6 +49,7 @@ class ProgressHeaderView: UICollectionReusableView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        self.accessibilityValue = String(format: valueFormat, Int(progress * 100.0))
         heightConstraint?.constant = progress * bounds.width
         // Why does this need to be here? (Experiment moving this around)
         containerView.layer.masksToBounds = true
