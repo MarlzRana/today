@@ -18,7 +18,7 @@ class ProgressHeaderView: UICollectionReusableView {
             self.setNeedsLayout()
             
             heightConstraint?.constant = progress * self.bounds.height
-            // Remove this and see what happens?
+            // Without the below line we get no animation when progress changes
             UIView.animate(withDuration: 0.2) { [weak self] in
                 self?.layoutIfNeeded()
             }
