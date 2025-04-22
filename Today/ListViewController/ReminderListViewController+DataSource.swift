@@ -112,9 +112,16 @@ extension ReminderListViewController {
     }
     
     func deleteReminder(withId id: Reminder.ID) {
-        let index = reminders.indexOfReminder(withId: id)
-        reminders.remove(at: index)
+        do {
+            try reminderStore.delete(with: id)
+            let index = reminders.indexOfReminder(withId: id)
+            reminders.remove(at: index)
+        } catch TodayError.accessDenied {
+        } catch {
+            showError(error)
+        }
     }
+        
     
     func prepareReminderStore() {
         // To call a function marked as async from a sync function, you need to establish a Task context
