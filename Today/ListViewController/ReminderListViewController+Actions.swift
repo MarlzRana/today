@@ -9,6 +9,10 @@ import UIKit
 
 extension ReminderListViewController {
     
+    @objc func eventStoreChanged(_ notification: NSNotification) {
+        self.reminderStoreChanged()
+    }
+    
     // The @objc annotation makes the below method available to Objective-C code
     // We need this to attach this method to our custom button
     @objc func didPressDoneButton(_ sender: ReminderDoneButton) {
