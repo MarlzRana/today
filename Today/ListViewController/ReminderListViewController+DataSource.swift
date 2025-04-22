@@ -91,7 +91,18 @@ extension ReminderListViewController {
     }
     
     func addReminder(_ reminder: Reminder) {
-        reminders.append(reminder)
+        // Make a copy (reminder was passed by reference)
+        var reminder = reminder
+        
+        do {
+            let idFromStore = try reminderStore.save(reminder)
+            reminder.id = idFromStore
+            reminders.append(reminder)
+        // We ignore the access denied error
+        } catch TodayError.accessDenied {
+        } catch {
+            showError(error)
+        }
     }
     
     func deleteReminder(withId id: Reminder.ID) {
